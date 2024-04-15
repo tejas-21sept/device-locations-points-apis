@@ -138,10 +138,15 @@ redis_instance = redis.StrictRedis(host=REDIS_HOST, port=REDIS_PORT, db=0)
 CACHES = {
     "default": {
         "BACKEND": "django_redis.cache.RedisCache",
-        "LOCATION": "redis://localhost:6379/0".format(
-            host=REDIS_HOST, port=int(REDIS_PORT)
-        ),
+        "LOCATION": f"redis://{REDIS_HOST}:{REDIS_PORT}/0",
         "OPTIONS": {"CLIENT_CLASS": "django_redis.client.DefaultClient"},
         "KEY_PREFIX": "example",
     }
 }
+
+# AWS credentials
+aws_access_key_id = str(os.getenv("ACCESS_KEY_ID"))
+aws_secret_access_key = str(os.getenv("SECRET_ACCESS_KEY"))
+region_name = str(os.getenv("REGION"))
+bucket_name = str(os.getenv("BUCKET_NAME"))
+file_name = str(os.getenv("FILE_NAME"))
