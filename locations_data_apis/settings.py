@@ -10,7 +10,6 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.0/ref/settings/
 """
 
-
 import os
 from pathlib import Path
 
@@ -139,9 +138,7 @@ redis_instance = redis.StrictRedis(host=REDIS_HOST, port=REDIS_PORT, db=0)
 CACHES = {
     "default": {
         "BACKEND": "django_redis.cache.RedisCache",
-        "LOCATION": "redis://localhost:6379/0".format(
-            host=REDIS_HOST, port=REDIS_PORT
-        ),
+        "LOCATION": f"redis://{REDIS_HOST}:{REDIS_PORT}/0",
         "OPTIONS": {"CLIENT_CLASS": "django_redis.client.DefaultClient"},
         "KEY_PREFIX": "example",
     }
