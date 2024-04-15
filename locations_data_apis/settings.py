@@ -10,6 +10,7 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.0/ref/settings/
 """
 
+
 import os
 from pathlib import Path
 
@@ -139,9 +140,16 @@ CACHES = {
     "default": {
         "BACKEND": "django_redis.cache.RedisCache",
         "LOCATION": "redis://localhost:6379/0".format(
-            host=REDIS_HOST, port=int(REDIS_PORT)
+            host=REDIS_HOST, port=REDIS_PORT
         ),
         "OPTIONS": {"CLIENT_CLASS": "django_redis.client.DefaultClient"},
         "KEY_PREFIX": "example",
     }
 }
+
+# AWS credentials
+aws_access_key_id = str(os.getenv("ACCESS_KEY_ID"))
+aws_secret_access_key = str(os.getenv("SECRET_ACCESS_KEY"))
+region_name = str(os.getenv("REGION"))
+bucket_name = str(os.getenv("BUCKET_NAME"))
+file_name = str(os.getenv("FILE_NAME"))
