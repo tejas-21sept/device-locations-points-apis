@@ -1,3 +1,10 @@
+import csv
+from datetime import datetime
+from io import StringIO
+
+import boto3
+import pandas as pd
+import redis
 from django.shortcuts import render
 from rest_framework import status
 from rest_framework.response import Response
@@ -205,10 +212,36 @@ class LocationPointsAPIView(APIView):
 
     def get_location_points_data(self, request, device_id):
         # Extract start_date, start_time, end_date, and end_time from the request body
-        start_date = request.data["start_date"]
-        start_time = request.data["start_time"]
-        end_date = request.data["end_date"]
-        end_time = request.data["end_time"]
+        start_date = (
+            request.data["start_date"] if "start_date" in request.data else None
+        )
+        start_time = (
+            request.data["start_time"] if "start_time" in request.data else None
+        )
+        end_date = request.data["end_date"] if "end_date" in request.data else None
+        end_time = request.data["end_time"] if "end_time" in request.data else None
+
+        missing_fields = []
+
+        # Check for missing fields
+        if not start_date:
+            missing_fields.append("start_date")
+        if not start_time:
+            missing_fields.append("start_time")
+        if not end_date:
+            missing_fields.append("end_date")
+        if not end_time:
+            missing_fields.append("end_time")
+
+        # If any required field is missing, return a 400 response
+        if missing_fields:
+            return Response(
+                api_response(
+                    status_code=200,
+                    message=f"Missing required fields: {', '.join(missing_fields)}",
+                ),
+                status=status.HTTP_400_BAD_REQUEST,
+            )
 
         # Read CSV file
         df = read_csv_from_s3()
