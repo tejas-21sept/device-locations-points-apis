@@ -12,5 +12,14 @@ services:
       - .:/code
     depends_on:
       - redis
+    networks:
+      - custom_network
+
   redis:
     image: "redis:alpine"
+    networks:
+      - custom_network
+
+networks:
+  custom_network:
+    driver: bridge
